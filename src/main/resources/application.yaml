@@ -16,3 +16,9 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+
+jwt:
+  private-key-path: "classpath:jwtKeys/private_key.pem"
+  public-key-path: "classpath:jwtKeys/public_key.pem"
+  expiration: ${JWT_ACCESS_EXPIRATION}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION}
