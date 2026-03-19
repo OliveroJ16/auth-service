@@ -1,8 +1,7 @@
 package com.olivero.auth.auth_service.security;
 
 import com.olivero.auth.auth_service.model.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -65,28 +64,30 @@ public class JwtTokenProvider {
         return buildToken(user, claims, refreshExpiration);
     }
 
-    public boolean validateToken(String token, User user, String expectedType) {
+    public boolean validateToken(String token, String userId, String expectedType) {
         try {
             Claims claims = extractClaims(token);
 
             String type = claims.get("token_type", String.class);
-            boolean isCorrectType = expectedType.equals(type);
-            boolean userMatches = claims.getSubject().equals(user.getId().toString());
+            String subject = claims.getSubject();
+
+            boolean isCorrectType = Objects.equals(expectedType, type);
+            boolean userMatches = Objects.equals(subject, userId);
 
             return isCorrectType && userMatches;
-        } catch (io.jsonwebtoken.ExpiredJwtException e) {
-            return false; //Mejorar despues esta excepcion
-        } catch (Exception e) {
+
+        }catch (ExpiredJwtException | MalformedJwtException e) {
+            // Personalizar despues
             return false;
         }
     }
 
-    public boolean isAccessTokenValid(String token, User user) {
-        return validateToken(token, user, "access");
+    public boolean isAccessTokenValid(String token, String userId) {
+        return validateToken(token, userId, "access");
     }
 
-    public boolean isRefreshTokenValid(String token, User user) {
-        return validateToken(token, user, "refresh");
+    public boolean isRefreshTokenValid(String token, String userId) {
+        return validateToken(token, userId, "refresh");
     }
 
      //Mejorar para validar si esta expirado (excepcion)
