@@ -41,21 +41,6 @@ public class JwtTokenProvider {
         this.publicKey = loadPublicKey();
     }
 
-    public String generateAccessToken(User user, List<String> roles) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("token_type", "access");
-        claims.put("roles", roles);
-        claims.put("email", user.getEmail());
-
-        return buildToken(user, claims, jwtExpiration);
-    }
-
-    public String generateRefreshToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("token_type", "refresh");
-        return buildToken(user, claims, refreshExpiration);
-    }
-
     private String buildToken(User user, Map<String, Object> claims, long expiration) {
         return Jwts.builder()
                 .claims(claims)
@@ -66,42 +51,42 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public boolean isAccessTokenValid(String token, User user) {
+    public String generateAccessToken(User user, List<String> roles) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("token_type", "access");
+        claims.put("roles", roles);
+        claims.put("email", user.getEmail());
+        return buildToken(user, claims, jwtExpiration);
+    }
+
+    public String generateRefreshToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("token_type", "refresh");
+        return buildToken(user, claims, refreshExpiration);
+    }
+
+    public boolean validateToken(String token, User user, String expectedType) {
         try {
             Claims claims = extractClaims(token);
 
             String type = claims.get("token_type", String.class);
-            if (!"access".equals(type)) {
-                return false;
-            }
-
+            boolean isCorrectType = expectedType.equals(type);
             boolean userMatches = claims.getSubject().equals(user.getId().toString());
-            boolean notExpired = !claims.getExpiration().before(new Date());
 
-            return userMatches && notExpired;
-
+            return isCorrectType && userMatches;
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            return false; //Mejorar despues esta excepcion
         } catch (Exception e) {
             return false;
         }
     }
 
+    public boolean isAccessTokenValid(String token, User user) {
+        return validateToken(token, user, "access");
+    }
+
     public boolean isRefreshTokenValid(String token, User user) {
-        try {
-            Claims claims = extractClaims(token);
-
-            String type = claims.get("token_type", String.class);
-            if (!"refresh".equals(type)) {
-                return false;
-            }
-
-            boolean userMatches = claims.getSubject().equals(user.getId().toString());
-            boolean notExpired = !claims.getExpiration().before(new Date());
-
-            return userMatches && notExpired;
-
-        } catch (Exception e) {
-            return false;
-        }
+        return validateToken(token, user, "refresh");
     }
 
      //Mejorar para validar si esta expirado (excepcion)
@@ -122,7 +107,7 @@ public class JwtTokenProvider {
                 .replace("-----END PRIVATE KEY-----", "")
                 .replace("\n", "")
                 .replace("\r", "")
-                .trim(); // 👈 importante
+                .trim();
 
         byte[] encoded = Base64.getDecoder().decode(pem);
 
