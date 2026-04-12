@@ -1,6 +1,6 @@
 package com.olivero.auth.auth_service.service.impl;
 
-import com.olivero.auth.auth_service.dto.request.UserRequest;
+import com.olivero.auth.auth_service.dto.request.RegisterRequest;
 import com.olivero.auth.auth_service.dto.response.UserResponse;
 import com.olivero.auth.auth_service.mapper.UserMapper;
 import com.olivero.auth.auth_service.model.User;
@@ -19,9 +19,9 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse saveUser (UserRequest userRequest){
-        User user = userMapper.toEntity(userRequest);
-        user.setPassword(passwordEncoder.encode(userRequest.password()));
+    public UserResponse saveUser (RegisterRequest registerRequest){
+        User user = userMapper.toEntity(registerRequest);
+        user.setPassword(passwordEncoder.encode(registerRequest.password()));
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);
     }

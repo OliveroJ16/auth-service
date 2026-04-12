@@ -11,3 +11,5 @@ public class AuthServiceApplication {
 	}
 
 }
+
+// TODO: Añadir verificación por correo electrónico en la version 2
