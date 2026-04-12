@@ -1,5 +1,6 @@
 package com.olivero.auth.auth_service.controller;
 
+import com.olivero.auth.auth_service.dto.request.LoginRequest;
 import com.olivero.auth.auth_service.dto.request.RegisterRequest;
 import com.olivero.auth.auth_service.dto.response.UserResponse;
 import com.olivero.auth.auth_service.service.UserService;
@@ -22,7 +23,8 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * configurar despues el securityConfig
-     */
+    @PostMapping("/login")
+    public  ResponseEntity<UserResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest){
+        return null;
+    }
 }
