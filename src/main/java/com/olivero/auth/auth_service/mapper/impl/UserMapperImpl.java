@@ -6,6 +6,8 @@ import com.olivero.auth.auth_service.mapper.UserMapper;
 import com.olivero.auth.auth_service.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 @Component
 public class UserMapperImpl implements UserMapper {
 
@@ -19,12 +21,13 @@ public class UserMapperImpl implements UserMapper {
     }
 
     @Override
-    public UserResponse toResponse(User user) {
+    public UserResponse toResponse(User user, Set<String> roles){
         return new UserResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getUsername(),
                 user.isEnabled(),
+                roles,
                 user.getCreatedAt()
         );
     }
