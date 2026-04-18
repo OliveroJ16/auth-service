@@ -1,5 +1,6 @@
 package com.olivero.auth.auth_service.security;
 
+import com.olivero.auth.auth_service.dto.response.UserResponse;
 import com.olivero.auth.auth_service.model.User;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
@@ -40,25 +41,25 @@ public class JwtTokenProvider {
         this.publicKey = loadPublicKey();
     }
 
-    private String buildToken(User user, Map<String, Object> claims, long expiration) {
+    private String buildToken(UserResponse user, Map<String, Object> claims, long expiration) {
         return Jwts.builder()
                 .claims(claims)
-                .subject(user.getId().toString())
+                .subject(user.id().toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(privateKey, Jwts.SIG.RS256)
                 .compact();
     }
 
-    public String generateAccessToken(User user, List<String> roles) {
+    public String generateAccessToken(UserResponse user, Set<String> roles) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("token_type", "access");
         claims.put("roles", roles);
-        claims.put("email", user.getEmail());
+        claims.put("email", user.email());
         return buildToken(user, claims, jwtExpiration);
     }
 
-    public String generateRefreshToken(User user) {
+    public String generateRefreshToken(UserResponse user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("token_type", "refresh");
         return buildToken(user, claims, refreshExpiration);

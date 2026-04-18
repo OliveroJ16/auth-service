@@ -22,3 +22,7 @@ jwt:
   public-key-path: "classpath:jwtKeys/public_key.pem"
   expiration: ${JWT_ACCESS_EXPIRATION}
   refresh-expiration: ${JWT_REFRESH_EXPIRATION}
+  refresh:
+    cookie:
+      name: "refresh-token"
+      max-age: ${JWT_REFRESH_COOKIE_MAX_AGE:86400}

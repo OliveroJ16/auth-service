@@ -13,3 +13,9 @@ public class AuthServiceApplication {
 }
 
 // TODO: Añadir verificación por correo electrónico en la version 2
+
+
+// REVISAR PORQUE EL METODO DE LA CLAE JWTPROVIDER NO SE ESTA USANDO
+
+//Verificar el uso de los ROLES en el sistema!!!!
+

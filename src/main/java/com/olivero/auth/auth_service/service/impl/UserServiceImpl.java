@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse saveUser (RegisterRequest registerRequest){
         User user = userMapper.toEntity(registerRequest);
         user.setPassword(passwordEncoder.encode(registerRequest.password()));
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.saveAndFlush(user);
 
         Role defaultRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Error: Here...")); //Verificar excepcion

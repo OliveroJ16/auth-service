@@ -1,6 +1,7 @@
 package com.olivero.auth.auth_service.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Builder
 @Table(name = "refresh_tokens")
 public class RefreshToken {
 
