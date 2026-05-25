@@ -13,6 +13,7 @@ import com.olivero.auth.auth_service.service.AuthService;
 import com.olivero.auth.auth_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -49,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void saveRefreshToken(UserResponse userResponse, String tokenString) {
-        var user = userRepository.findById(userResponse.id()).orElse(null); //Agregar excpcion despues
+        var user = userRepository.findById(userResponse.id()).orElseThrow(() -> new UsernameNotFoundException("Invalid credentials or account not found"));
         LocalDateTime expiresAt = LocalDateTime.now().plus(Duration.ofMillis(refreshExpiration));
         var refreshToken = RefreshToken.builder()
                 .token(tokenString)
