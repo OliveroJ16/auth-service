@@ -1,9 +1,7 @@
 package com.olivero.auth.auth_service.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
@@ -17,6 +15,8 @@ import java.util.UUID;
 @Setter
 @Builder
 @Table(name = "refresh_tokens")
+@NoArgsConstructor
+@AllArgsConstructor
 public class RefreshToken {
 
     @Id
@@ -25,7 +25,7 @@ public class RefreshToken {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(length = 500, nullable = false, unique = true)
+    @Column(nullable = false)
     private String token;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -34,9 +34,6 @@ public class RefreshToken {
 
     @Column(nullable = false)
     private boolean revoked = false;
-
-    @Column(nullable = false)
-    private boolean expired = false;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
