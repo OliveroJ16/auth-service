@@ -16,6 +16,13 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+    open-in-view: false
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true
 
 jwt:
   private-key-path: "classpath:jwtKeys/private_key.pem"

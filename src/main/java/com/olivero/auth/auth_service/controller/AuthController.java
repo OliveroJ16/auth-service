@@ -7,6 +7,9 @@ import com.olivero.auth.auth_service.dto.response.AuthResponse;
 import com.olivero.auth.auth_service.dto.response.UserResponse;
 import com.olivero.auth.auth_service.security.CookieProvider;
 import com.olivero.auth.auth_service.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +26,10 @@ public class AuthController {
     private final AuthService authService;
     private final CookieProvider cookieProvider;
 
+    @Operation(
+            summary = "Register a new user",
+            description = "Creates a user account and returns an access token. A refresh token is stored in an HttpOnly cookie."
+    )
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         AuthResult authResult = authService.registerUser(registerRequest);

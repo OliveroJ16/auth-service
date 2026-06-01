@@ -56,7 +56,6 @@ public class AuthServiceImpl implements AuthService {
                 .token(tokenString)
                 .user(user)
                 .revoked(false)
-                .expired(false)
                 .expiresAt(expiresAt)
                 .build();
         refreshTokenRepository.save(refreshToken);
